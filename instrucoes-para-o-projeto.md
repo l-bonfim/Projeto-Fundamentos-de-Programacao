@@ -23,7 +23,7 @@ Lembre-se de mergear suas branchs, a branch de sua seção antes de fazer qualqu
 Outra boa pratica é nomear as variáveis e funções de acordo com sua utilidade,
 por exemplo:
 
->esta_e_uma_funcao_de_exemplo():
+>esta_e_uma_funcao_de_exemplo(): <br/>
 >    aqui_e_uma_variavel_com_o_texto_exemplo = 'exemplo'
 
 estamos nessa em grupo, e quanto mais claro ficar o que você está fazendo,
