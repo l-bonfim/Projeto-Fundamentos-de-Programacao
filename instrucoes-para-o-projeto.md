@@ -40,10 +40,15 @@ apertar a barra de espaço 4 vezes.
 Sempre que você temrinar uma etapa de sua atividade, lembre-se de commitar o código.
 
 >git status
+
 para ver o que você alterou;
+
 >git add .
+
 adiciona todas as alteroções no seu commit;
+
 >git commit -m 'mensagem do commit'
+
 comenta a seção de alterações que você adicionou;
 
 Isso é útil para sabermos o que foi feito, e caso hajam problemas, podemos recuperar o progresso
