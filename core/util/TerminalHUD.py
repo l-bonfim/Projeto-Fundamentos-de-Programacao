@@ -18,7 +18,7 @@ except ImportError:
 class TerminalHUD:
     """
     TerminalHUD - A framework for creating HUD interfaces in terminal
-    Exact replica of Node.js version in Python
+    With navigation support between menus
     """
     
     def __init__(self, config: Dict[str, Any] = None):
@@ -33,6 +33,7 @@ class TerminalHUD:
         self.loading_thread = None
         self.stop_loading_flag = False
         self.original_terminal_settings = None
+        self.menu_stack = []  # Track menu navigation history
 
     def get_color_code(self, color: str) -> str:
         colors = {
@@ -167,13 +168,9 @@ class TerminalHUD:
                     self.last_selected_index = self.get_linear_index_from_coordinates(lines, line, col)
                     selected = lines[line][col]
                     
-                    # Handle action
+                    # Handle action - return special marker if action is present
                     if isinstance(selected, dict) and selected.get('action'):
-                        action = selected['action']
-                        if asyncio.iscoroutinefunction(action):
-                            await action()
-                        else:
-                            action()
+                        return {'action': selected['action'], 'name': selected.get('name', str(selected))}
                     
                     result = selected if isinstance(selected, str) else selected.get('name', str(selected))
                     return result
@@ -229,15 +226,12 @@ class TerminalHUD:
                     print('Invalid option, try again.')
                     return await self.display_menu_from_options(question, options, config)
 
+                # Handle action - return special marker if action is present
+                if isinstance(selected, dict) and selected.get('action'):
+                    return {'action': selected['action'], 'name': selected.get('name', str(selected))}
+                
                 if isinstance(selected, str):
                     return selected
-                
-                if selected.get('action'):
-                    action = selected['action']
-                    if asyncio.iscoroutinefunction(action):
-                        await action()
-                    else:
-                        action()
                 
                 return selected.get('name', str(selected))
                 
@@ -297,19 +291,18 @@ class TerminalHUD:
         
         self.start_loading()
         
-        # Get menu data
-        menu_result = menu_generator(props)
-        if asyncio.iscoroutine(menu_result):
-            menu = await menu_result
+        # Get menu data - handle both sync and async menu generators
+        if asyncio.iscoroutinefunction(menu_generator):
+            menu = await menu_generator(props)
         else:
-            menu = menu_result
+            menu = menu_generator(props)
             
         self.stop_loading()
 
         if alert:
             print(f"{alert_emoji}  {alert}\n")
 
-        # Get title
+        # Get title - handle both sync and async titles
         menu_title = menu.get('title', '')
         if asyncio.iscoroutine(menu_title):
             menu_title = await menu_title
@@ -325,11 +318,39 @@ class TerminalHUD:
         
         self.last_menu_generator = menu_generator
 
+        # Store current menu in navigation stack
+        self.menu_stack.append((menu_generator, config))
+
         if self.numbered_menus:
-            return await self.display_numbered_menu(menu_title, menu.get('options', []))
+            result = await self.display_numbered_menu(menu_title, menu.get('options', []))
         else:
-            return await self.display_menu_with_arrows(menu_title, menu.get('options', []), 
-                                                     {'clear': True}, initial_index)
+            result = await self.display_menu_with_arrows(menu_title, menu.get('options', []), 
+                                                       {'clear': True}, initial_index)
+
+        # Handle actions that return new menus
+        if isinstance(result, dict) and 'action' in result:
+            action_result = result['action']
+            
+            # Execute the action
+            if asyncio.iscoroutinefunction(action_result):
+                action_result = await action_result()
+            elif callable(action_result):
+                action_result = action_result()
+            else:
+                action_result = action_result
+            
+            # If action returns a menu generator, display that menu
+            if callable(action_result):
+                return await self.display_menu(action_result, config)
+            elif asyncio.iscoroutinefunction(action_result):
+                # If it's an async function that returns a menu, await it and display
+                menu_data = await action_result()
+                if callable(menu_data):
+                    return await self.display_menu(menu_data, config)
+            
+            return result['name']
+        
+        return result
 
     async def display_numbered_menu(self, title: str, options: List[Any]) -> str:
         self.clear_screen()
@@ -368,6 +389,10 @@ class TerminalHUD:
                     print('Invalid option, try again.')
                     return await self.display_numbered_menu(title, options)
 
+                # Handle action - return special marker if action is present
+                if isinstance(selected, dict) and selected.get('action'):
+                    return {'action': selected['action'], 'name': selected.get('name', str(selected))}
+
                 if selected.get('action'):
                     action = selected['action']
                     if asyncio.iscoroutinefunction(action):
@@ -379,6 +404,18 @@ class TerminalHUD:
 
             except ValueError:
                 print('Please enter a valid number.')
+
+    async def go_back(self):
+        """Go back to previous menu in navigation stack"""
+        if len(self.menu_stack) > 1:
+            self.menu_stack.pop()  # Remove current menu
+            previous_menu_generator, previous_config = self.menu_stack.pop()  # Get previous menu
+            return await self.display_menu(previous_menu_generator, previous_config)
+        return None
+
+    async def navigate_to_menu(self, menu_generator: Callable, config: Dict[str, Any] = None):
+        """Navigate to a specific menu"""
+        return await self.display_menu(menu_generator, config)
 
     async def press_wait(self):
         print('\nPress any key to continue...')
@@ -427,7 +464,7 @@ class TerminalHUD:
             return 'unknown'
 
 
-# TEST CODE
+# Example usage and test code - only runs when file is executed directly
 async def test_menu_generator(props):
     """Test menu generator"""
     return {
@@ -446,6 +483,8 @@ async def test_menu_generator(props):
     }
 
 async def main():
+    """Main test function"""
+    # Create instance for testing
     hud = TerminalHUD({'highlight_color': 'cyan'})
     
     try:
@@ -465,5 +504,6 @@ async def main():
     finally:
         hud.close()
 
+# Only run the example if this file is executed directly
 if __name__ == "__main__":
     asyncio.run(main())
