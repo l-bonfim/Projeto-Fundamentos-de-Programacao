@@ -52,7 +52,20 @@ apenas para a primeira vez, proximos pushs podem ser feito apenas com:
 
 git push
 
-## 4 - Sugestões e nosso grupo:
+## 4 - Pair programming:
+
+Provavelmente as atividades serão feitas em duplas, eu gostaria de sugerir a vocês a pratica
+da programação em par, chamada de video e compartilhamento de tela de quem estiver escrevendo o código,
+caso seja feito assim, adicionem ao fim do commit o nome das pessoas que realizaram a parte:
+
+git commit -m 'etapa x - feito por fulano 1 e fulano 2'
+
+para identificação das passoas responsáveis pela etapa concluida.
+
+Eu gosto da pratico do pair programming, porque acredito que ajuda a aprender a programar e deixa
+mais rapido a identificação de problemas caso ocorram.
+
+## 5 - Sugestões e nosso grupo:
 
 Todos fazem parte do projeto, então sintam-se livres para sugerir ideias, o projeto será melhor
 se todos acreditarem no que estão fazendo.
