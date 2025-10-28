@@ -24,7 +24,7 @@ Outra boa pratica é nomear as variáveis e funções de acordo com sua utilidad
 por exemplo:
 
 >esta_e_uma_funcao_de_exemplo(): <br/>
->&nbsp;aqui_e_uma_variavel_com_o_texto_exemplo = 'exemplo'
+>&emsp;aqui_e_uma_variavel_com_o_texto_exemplo = 'exemplo'
 
 estamos nessa em grupo, e quanto mais claro ficar o que você está fazendo,
 mais fácil será identificar erros e problemas, e unificar os códigos em um projeto coeso.
