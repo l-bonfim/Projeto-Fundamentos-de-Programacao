@@ -29,13 +29,13 @@ por exemplo:
 estamos nessa em grupo, e quanto mais claro ficar o que você está fazendo,
 mais fácil será identificar erros e problemas, e unificar os códigos em um projeto coeso.
 
-### 3.1 - Estajam sempre atentos a identação:
+### 3.1 - Estaja sempre atento a identação:
 
 Aqui é mais um lembrete, estamos utilizando python, então a identação é muito importante.
 Veja se no seu VScode na parte inferior está com "Spaces: 4", significa que seu tab é equivalente a
 apertar a barra de espaço 4 vezes.
 
-### 3.2 - lembre de fazer commits regularmente:
+### 3.2 - Lembre de fazer commits regularmente:
 
 Sempre que você temrinar uma etapa de sua atividade, lembre-se de commitar o código.
 
