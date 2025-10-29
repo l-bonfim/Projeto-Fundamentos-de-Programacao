@@ -1,12 +1,12 @@
 # Projeto Fundamentos de Programacao
 
 Integrantes:<br>
-Lucas Bonfim
-Augusto Freitas
-Daniel Massud
-João Lucas Mendes
-João Vitor da Silva
-Raysa Queiroz
+Lucas Bonfim<br>
+Augusto Freitas<br>
+Daniel Massud<br>
+João Lucas Mendes<br>
+João Vitor da Silva<br>
+Raysa Queiroz<br>
 
 Líder: Lucas Bonfim
 
