@@ -1,6 +1,6 @@
 # Projeto Fundamentos de Programacao
 
-Integrantes:
+Integrantes:<br>
 Lucas Bonfim
 Augusto Freitas
 Daniel Massud
