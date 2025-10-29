@@ -7,6 +7,7 @@ Daniel Massud<br>
 João Lucas Mendes<br>
 João Vitor da Silva<br>
 Raysa Queiroz<br>
+Leonardo Freitas<br>
 
 Líder: Lucas Bonfim
 
