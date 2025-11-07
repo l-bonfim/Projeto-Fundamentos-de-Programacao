@@ -60,7 +60,7 @@ Você terá que ativar o ambiente de desenvolvimento virtual dentro dela, para t
 ### 3.1 - Ativando o .venv (ambiente virtual de desenvolvimento):
 
 Dentro do nosso backend existe uma pasta chamada ".venv", nela tem todas as biblioteca e dependências que iremos usar,
-mas para usa-la é preciso ativa-lá:
+mas para usa-la é preciso ativa-la:
 
 >./.venv/bin/activate
 
