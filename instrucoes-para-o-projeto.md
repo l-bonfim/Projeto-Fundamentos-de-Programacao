@@ -38,7 +38,7 @@ Para criar branches para etapas do projeto:
 
 >git checkout -b etapa-exemplo-branch
 
-Você pode commitar (seção ##) na branch de etapa, mas lembre-se que você deve fazer o pull request,
+Você pode commitar (seção 4.2) na branch de etapa, mas lembre-se que você deve fazer o pull request,
 a partir da sua branch então, antes de utilizar o:
 
 >git push
