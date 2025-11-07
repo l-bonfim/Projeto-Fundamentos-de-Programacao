@@ -12,6 +12,37 @@ function Home() {
     navigate("/Login")
   }
 
+  const test_connect = async () => {
+    fetch('http://127.0.0.1:5000', {
+      method: ['GET']
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data)
+      })
+      .catch(error => {
+        console.error(error)
+      })
+      fetch('http://127.0.0.1:5000', {
+        method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+          teste2: "teste2"
+      }),
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data)
+      })
+      .catch(error => {
+        console.error(error)
+      })
+  }
+
+  test_connect()
+
   return (
 
     <div>
