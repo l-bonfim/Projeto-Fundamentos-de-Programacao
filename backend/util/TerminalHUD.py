@@ -100,75 +100,66 @@ class TerminalHUD:
         if config is None:
             config = {}
         
-        lines = self.normalize_options(options)
-        line, col = self.get_coordinates_from_linear_index(lines, initial_index)
+        # Convert all options to a flat list for simpler navigation
+        flat_options = []
+        for opt in options:
+            if isinstance(opt, list):
+                flat_options.extend(opt)
+            else:
+                flat_options.append(opt)
+        
+        current_index = initial_index
+        if current_index >= len(flat_options):
+            current_index = 0
 
         def render_menu():
-            # Clear screen and position cursor at top
+            # Use normal print statements without raw mode interference
             self.clear_screen()
             
-            # Print question
             if question:
                 print(f"{question}\n")
             
-            # Print menu options
-            for i, line_opts in enumerate(lines):
-                line_str = ""
-                for j, opt in enumerate(line_opts):
-                    text = opt if isinstance(opt, str) else opt.get('name', str(opt))
-                    
-                    if i == line and j == col:
-                        # Selected option: colored text with arrow
-                        color = self.get_color_code(self.highlight_color)
-                        line_str += f"{color}→ {text}{self.reset_color()}"
-                    else:
-                        # Normal option
-                        line_str += f"  {text}"
-                    
-                    if j < len(line_opts) - 1:
-                        line_str += "   "  # Space between options
-                print(line_str)
+            # Render all options with proper line breaks
+            for i, opt in enumerate(flat_options):
+                text = opt if isinstance(opt, str) else opt.get('name', str(opt))
+                
+                if i == current_index:
+                    # Selected option
+                    color = self.get_color_code(self.highlight_color)
+                    print(f"{color}→ {text}{self.reset_color()}")
+                else:
+                    # Normal option
+                    print(f"  {text}")
             
-            # Print instructions
-            print(f"\nUse arrow keys to navigate, Enter to select")
-            print(f"Selected: Line {line + 1}, Option {col + 1}")
+            # Removed the "Selected:" line - only show instructions
+            print(f"\nUse ↑↓ arrows to navigate, Enter to select")
 
-        # Set up terminal for raw input
+        # Initial render with normal terminal mode
+        render_menu()
+        
+        # Setup terminal for key reading only
         self._setup_terminal()
         
         try:
-            # Initial render
-            render_menu()
-            
             while True:
                 key = self._get_key()
                 
-                old_line, old_col = line, col
+                old_index = current_index
                 
-                # Handle navigation
-                if key == 'up': 
-                    if line > 0:
-                        line -= 1
-                    # Ensure column is within bounds for the new line
-                    if col >= len(lines[line]):
-                        col = len(lines[line]) - 1
+                if key == 'up':
+                    if current_index > 0:
+                        current_index -= 1
+                    else:
+                        current_index = len(flat_options) - 1  # Wrap to bottom
                 elif key == 'down':
-                    if line < len(lines) - 1:
-                        line += 1
-                    # Ensure column is within bounds for the new line
-                    if col >= len(lines[line]):
-                        col = len(lines[line]) - 1
-                elif key == 'left':
-                    if col > 0:
-                        col -= 1
-                elif key == 'right':
-                    if col < len(lines[line]) - 1:
-                        col += 1
+                    if current_index < len(flat_options) - 1:
+                        current_index += 1
+                    else:
+                        current_index = 0  # Wrap to top
                 elif key == 'enter':
-                    self.last_selected_index = self.get_linear_index_from_coordinates(lines, line, col)
-                    selected = lines[line][col]
+                    self.last_selected_index = current_index
+                    selected = flat_options[current_index]
                     
-                    # Handle action - return special marker if action is present
                     if isinstance(selected, dict) and selected.get('action'):
                         return {'action': selected['action'], 'name': selected.get('name', str(selected))}
                     
@@ -176,10 +167,14 @@ class TerminalHUD:
                     return result
                 elif key == 'ctrl_c':
                     raise KeyboardInterrupt
+                elif key == 'esc':
+                    return 'back'
                 
-                # Only re-render if selection changed
-                if old_line != line or old_col != col:
+                if old_index != current_index:
+                    # Restore terminal for proper rendering, then put back in raw mode
+                    self._restore_terminal()
                     render_menu()
+                    self._setup_terminal()
                 
         finally:
             self._restore_terminal()
@@ -200,19 +195,19 @@ class TerminalHUD:
         option_map = {}
         index = 1
         
-        def print_option(opt):
-            nonlocal index
+        # Flatten options for simple display
+        flat_options = []
+        for opt in options:
+            if isinstance(opt, list):
+                flat_options.extend(opt)
+            else:
+                flat_options.append(opt)
+        
+        for opt in flat_options:
             text = opt if isinstance(opt, str) else opt.get('name', str(opt))
             print(f"{index}. {text}")
             option_map[index] = opt
             index += 1
-
-        for opt in options:
-            if isinstance(opt, list):
-                for sub_opt in opt:
-                    print_option(sub_opt)
-            else:
-                print_option(opt)
 
         while True:
             try:
@@ -226,7 +221,6 @@ class TerminalHUD:
                     print('Invalid option, try again.')
                     return await self.display_menu_from_options(question, options, config)
 
-                # Handle action - return special marker if action is present
                 if isinstance(selected, dict) and selected.get('action'):
                     return {'action': selected['action'], 'name': selected.get('name', str(selected))}
                 
@@ -237,43 +231,6 @@ class TerminalHUD:
                 
             except ValueError:
                 print('Please enter a valid number.')
-
-    def normalize_options(self, options: List[Any]) -> List[List[Any]]:
-        result = []
-        for opt in options:
-            if isinstance(opt, list):
-                normalized_line = []
-                for item in opt:
-                    if isinstance(item, str):
-                        normalized_line.append({'name': item})
-                    else:
-                        normalized_line.append(item)
-                result.append(normalized_line)
-            elif isinstance(opt, dict) and opt.get('type') == 'options':
-                normalized_line = []
-                for item in opt.get('value', []):
-                    if isinstance(item, str):
-                        normalized_line.append({'name': item})
-                    else:
-                        normalized_line.append(item)
-                result.append(normalized_line)
-            else:
-                if isinstance(opt, str):
-                    result.append([{'name': opt}])
-                else:
-                    result.append([opt])
-        return result
-
-    def get_coordinates_from_linear_index(self, lines: List[List[Any]], index: int) -> tuple:
-        count = 0
-        for i, line in enumerate(lines):
-            if index < count + len(line):
-                return i, index - count
-            count += len(line)
-        return len(lines) - 1, len(lines[-1]) - 1
-
-    def get_linear_index_from_coordinates(self, lines: List[List[Any]], line: int, col: int) -> int:
-        return sum(len(l) for l in lines[:line]) + col
 
     async def display_menu(self, menu_generator: Callable, config: Dict[str, Any] = None) -> str:
         if config is None:
@@ -291,7 +248,7 @@ class TerminalHUD:
         
         self.start_loading()
         
-        # Get menu data - handle both sync and async menu generators
+        # Get menu data
         if asyncio.iscoroutinefunction(menu_generator):
             menu = await menu_generator(props)
         else:
@@ -302,7 +259,6 @@ class TerminalHUD:
         if alert:
             print(f"{alert_emoji}  {alert}\n")
 
-        # Get title - handle both sync and async titles
         menu_title = menu.get('title', '')
         if asyncio.iscoroutine(menu_title):
             menu_title = await menu_title
@@ -317,8 +273,6 @@ class TerminalHUD:
             initial_index += selected_inc
         
         self.last_menu_generator = menu_generator
-
-        # Store current menu in navigation stack
         self.menu_stack.append((menu_generator, config))
 
         if self.numbered_menus:
@@ -327,11 +281,12 @@ class TerminalHUD:
             result = await self.display_menu_with_arrows(menu_title, menu.get('options', []), 
                                                        {'clear': True}, initial_index)
 
-        # Handle actions that return new menus
+        if result == 'back':
+            return await self.go_back()
+
         if isinstance(result, dict) and 'action' in result:
             action_result = result['action']
             
-            # Execute the action
             if asyncio.iscoroutinefunction(action_result):
                 action_result = await action_result()
             elif callable(action_result):
@@ -339,11 +294,9 @@ class TerminalHUD:
             else:
                 action_result = action_result
             
-            # If action returns a menu generator, display that menu
             if callable(action_result):
                 return await self.display_menu(action_result, config)
             elif asyncio.iscoroutinefunction(action_result):
-                # If it's an async function that returns a menu, await it and display
                 menu_data = await action_result()
                 if callable(menu_data):
                     return await self.display_menu(menu_data, config)
@@ -360,20 +313,20 @@ class TerminalHUD:
         option_map = {}
         index = 1
         
+        # Flatten options
+        flat_options = []
         for opt in options:
-            if isinstance(opt, dict) and opt.get('type') == 'options' and isinstance(opt.get('value'), list):
-                opt_values = opt['value']
-                option_texts = []
-                for i, item in enumerate(opt_values):
-                    item_name = item.get('name', str(item))
-                    option_texts.append(f"{index + i}. {item_name}")
-                    option_map[index + i] = item
-                print(" ".join(option_texts))
-                index += len(opt_values)
-            elif isinstance(opt, dict) and opt.get('type') == 'text' and 'value' in opt:
+            if isinstance(opt, list):
+                flat_options.extend(opt)
+            else:
+                flat_options.append(opt)
+        
+        for opt in flat_options:
+            if isinstance(opt, dict) and opt.get('type') == 'text' and 'value' in opt:
                 print(opt['value'])
-            elif isinstance(opt, dict) and 'name' in opt:
-                print(f"{index}. {opt['name']}")
+            else:
+                text = opt if isinstance(opt, str) else opt.get('name', str(opt))
+                print(f"{index}. {text}")
                 option_map[index] = opt
                 index += 1
 
@@ -389,7 +342,6 @@ class TerminalHUD:
                     print('Invalid option, try again.')
                     return await self.display_numbered_menu(title, options)
 
-                # Handle action - return special marker if action is present
                 if isinstance(selected, dict) and selected.get('action'):
                     return {'action': selected['action'], 'name': selected.get('name', str(selected))}
 
@@ -408,41 +360,50 @@ class TerminalHUD:
     async def go_back(self):
         """Go back to previous menu in navigation stack"""
         if len(self.menu_stack) > 1:
-            self.menu_stack.pop()  # Remove current menu
-            previous_menu_generator, previous_config = self.menu_stack.pop()  # Get previous menu
+            self.menu_stack.pop()
+            previous_menu_generator, previous_config = self.menu_stack.pop()
             return await self.display_menu(previous_menu_generator, previous_config)
         return None
 
     async def navigate_to_menu(self, menu_generator: Callable, config: Dict[str, Any] = None):
-        """Navigate to a specific menu"""
         return await self.display_menu(menu_generator, config)
 
     async def press_wait(self):
         print('\nPress any key to continue...')
         self._setup_terminal()
         try:
-            self._get_key()  # Wait for any key
+            self._get_key()
         finally:
             self._restore_terminal()
 
     def close(self):
         self._restore_terminal()
 
-    # Terminal control methods
     def _setup_terminal(self):
+        """Setup terminal for single character input without echo"""
         if not IS_WINDOWS and sys.stdin.isatty():
-            self.original_terminal_settings = termios.tcgetattr(sys.stdin)
-            tty.setraw(sys.stdin.fileno())
+            try:
+                self.original_terminal_settings = termios.tcgetattr(sys.stdin)
+                new_settings = termios.tcgetattr(sys.stdin)
+                new_settings[3] = new_settings[3] & ~(termios.ICANON | termios.ECHO)
+                termios.tcsetattr(sys.stdin, termios.TCSADRAIN, new_settings)
+            except Exception as e:
+                pass
 
     def _restore_terminal(self):
+        """Restore terminal to original settings"""
         if not IS_WINDOWS and self.original_terminal_settings and sys.stdin.isatty():
-            termios.tcsetattr(sys.stdin, termios.TCSADRAIN, self.original_terminal_settings)
-            self.original_terminal_settings = None
+            try:
+                termios.tcsetattr(sys.stdin, termios.TCSADRAIN, self.original_terminal_settings)
+                self.original_terminal_settings = None
+            except Exception as e:
+                pass
 
     def _get_key(self) -> str:
+        """Get a single key press with proper blocking"""
         if IS_WINDOWS:
             ch = msvcrt.getch()
-            if ch == b'\xe0':  # Arrow keys
+            if ch == b'\xe0':
                 ch = msvcrt.getch()
                 if ch == b'H': return 'up'
                 if ch == b'P': return 'down'
@@ -450,47 +411,49 @@ class TerminalHUD:
                 if ch == b'M': return 'right'
             elif ch == b'\r': return 'enter'
             elif ch == b'\x03': return 'ctrl_c'
+            elif ch == b'\x1b': return 'esc'
             return 'unknown'
         else:
-            ch = sys.stdin.read(1)
-            if ch == '\x1b':  # Escape sequence
-                ch += sys.stdin.read(2)
-                if ch == '\x1b[A': return 'up'
-                if ch == '\x1b[B': return 'down'
-                if ch == '\x1b[C': return 'right'
-                if ch == '\x1b[D': return 'left'
-            elif ch == '\r' or ch == '\n': return 'enter'
-            elif ch == '\x03': return 'ctrl_c'
-            return 'unknown'
+            # Block until we get a key
+            while True:
+                ch = sys.stdin.read(1)
+                if ch == '\x1b':
+                    # Escape sequence - read more
+                    ch2 = sys.stdin.read(1)
+                    if ch2 == '[':
+                        ch3 = sys.stdin.read(1)
+                        if ch3 == 'A': return 'up'
+                        if ch3 == 'B': return 'down'
+                        if ch3 == 'C': return 'right'
+                        if ch3 == 'D': return 'left'
+                    return 'esc'
+                elif ch == '\r' or ch == '\n': 
+                    return 'enter'
+                elif ch == '\x03': 
+                    return 'ctrl_c'
+                # Ignore other keys
 
 
-# Example usage and test code - only runs when file is executed directly
+# Test with a simpler menu structure
 async def test_menu_generator(props):
-    """Test menu generator"""
     return {
         'title': '🏠 MAIN MENU',
         'options': [
-            [
-                {'name': '📁 OPEN FILE', 'action': lambda: print("Opening file...")},
-                {'name': '💾 SAVE FILE', 'action': lambda: print("Saving file...")}
-            ],
-            [
-                {'name': '⚙️ SETTINGS', 'action': lambda: print("Opening settings...")},
-                {'name': '🔧 TOOLS', 'action': lambda: print("Opening tools...")}
-            ],
-            {'name': '🚪 EXIT', 'action': lambda: print("Goodbye!")}
+            '📁 OPEN FILE',
+            '💾 SAVE FILE', 
+            '⚙️ SETTINGS',
+            '🔧 TOOLS',
+            '🚪 EXIT'
         ]
     }
 
 async def main():
-    """Main test function"""
-    # Create instance for testing
     hud = TerminalHUD({'highlight_color': 'cyan'})
     
     try:
         result = await hud.display_menu(test_menu_generator, {
             'clear_screen': True,
-            'alert': 'Welcome to the fixed TerminalHUD!',
+            'alert': 'Welcome to TerminalHUD!',
             'alert_emoji': '🎯'
         })
         print(f"\nSelected: {result}")
@@ -504,6 +467,5 @@ async def main():
     finally:
         hud.close()
 
-# Only run the example if this file is executed directly
 if __name__ == "__main__":
     asyncio.run(main())
