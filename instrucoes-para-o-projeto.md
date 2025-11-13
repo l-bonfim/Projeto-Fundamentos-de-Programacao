@@ -70,7 +70,7 @@ Para criar o ambiente virtual:
 
 Agora você precisa ativá-lo:
 
->./.venv/bin/activate
+>./.venv/Scripts/activate
 
 Com o ambiente virtual ativo, você tera que instalar as bibliotecas, com os seguintes comandos:
 

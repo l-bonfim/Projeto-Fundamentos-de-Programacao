@@ -12,10 +12,22 @@
     "id": 1
   },
   {
+    "name": "test",
+    "email": "test",
+    "password": "test",
+    "id": 2
+  },
+  {
     "name": "nametest",
     "email": "ssa",
     "password": "passtest",
     "id": 3
+  },
+  {
+    "name": "",
+    "email": "",
+    "password": "",
+    "id": 4
   },
   {
     "name": "nametest",

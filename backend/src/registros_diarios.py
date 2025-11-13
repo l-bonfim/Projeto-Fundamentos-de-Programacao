@@ -25,14 +25,14 @@ def salvando_registros(registros):
         json.dump(registros, arquivo, ensure_ascii=False, indent=4)
 
 
-def criando_registros(data, habito, status, humor, observacoes):
+def criando_registros(data, habito, cumprido, humor, observacoes):
 # Cria um novo registro diário.
     registros = carregando_registros()
     novo_registro = {
         "id": int(datetime.now().timestamp()),
         "data": data,
         "habito": habito,
-        "status": status,
+        "cumprido": cumprido,
         "humor": humor,
         "observacoes": observacoes
     }
@@ -50,7 +50,7 @@ def listando_registros():
     print("\nLISTA DE REGISTROS: ")
     for r in registros:
         print(f"ID: {r['id']} | Data: {r['data']} | Hábito: {r['habito']} | "
-              f"Status: {r['status']} | Humor: {r['humor']} | Obs.: {r['observacoes']}")
+              f"Cumprido: {r['cumprido']} | Humor: {r['humor']} | Obs.: {r['observacoes']}")
         
 
 def atualizando_registro(id_registro, novos_dados):
@@ -91,10 +91,10 @@ if __name__ == "__main__":
         if opcao == "1":
             data = input("Data (DD-MM-AAA): ")
             habito = input("Hábito: ")
-            status = input("Status(Cumprido/ Não Cumprido): ")
+            cumprido = bool(input("Cumprido?(True/False): ").capitalize())
             humor = input("Humor(Feliz/Neutro/Triste): ")
             obs = input("Observações: ")
-            criando_registros(data, habito, status, humor, obs)
+            criando_registros(data, habito, cumprido, humor, obs)
         
         elif opcao == "2":
             listando_registros()
@@ -103,7 +103,7 @@ if __name__ == "__main__":
             listando_registros()
             try:
                 id_registro = int(input("Digite o ID do registro para atualizar: "))
-                campo = input("Campo a atualizar (data/habito/status/humor/observacoes): ")
+                campo = input("Campo a atualizar (data/habito/cumprido/humor/observacoes): ")
                 novo_valor = input(f"Novo valor para {campo}: ")
                 atualizando_registro(id_registro, {campo: novo_valor})
             except ValueError:
