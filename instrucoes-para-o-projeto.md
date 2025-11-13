@@ -74,10 +74,7 @@ Agora você precisa ativá-lo:
 
 Com o ambiente virtual ativo, você tera que instalar as bibliotecas, com os seguintes comandos:
 
->pip install flask<br/>
->pip install flask-cors<br/>
->pip install PyJWT<br/>
->pip install cryptography
+>pip install -r requirements.txt
 
 Para ativar o endereço de backend, depois de estar no ambiente virtual, utilize:
 
