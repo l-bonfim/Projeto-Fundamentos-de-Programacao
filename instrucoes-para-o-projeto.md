@@ -21,7 +21,7 @@ em relação ao git.
 
 Vá para branch main:
 
->git checkout main
+>git checkout main<br/>
 >git pull
 
 Com esses processos, você garante que estará atualizado com o nosso github, e não jogará fora qualquer progresso
@@ -29,7 +29,7 @@ que você já tiver feito, caso programe antes de fazer isso.
 
 Para voltar para sua branch como tudo atualizado:
 
->git checkout seu-nome-e-sobrenome-section
+>git checkout seu-nome-e-sobrenome-section<br/>
 >git merge main
 
 ### 2.2 - Caso divida sua branch em branches de etapas:
@@ -45,7 +45,7 @@ a partir da sua branch então, antes de utilizar o:
 
 Faça:
 
->git checkout seu-nome-e-sobrenome-section
+>git checkout seu-nome-e-sobrenome-section<br/>
 >git merge etapa-exemplo-branch
 
 ## 3 - Para iniciar sua parte:
@@ -55,24 +55,43 @@ depois de já estar na pasta do projeto:
 
 >cd ./backend
 
-Você terá que ativar o ambiente de desenvolvimento virtual dentro dela, para ter acesso as extensões.
+Você terá que criar e ativar o ambiente de desenvolvimento virtual dentro dela, para ter acesso as extensões.
 
-### 3.1 - Ativando o .venv (ambiente virtual de desenvolvimento):
+### 3.1 - Criand e ativando o .venv (ambiente virtual de desenvolvimento):
 
-Dentro do nosso backend existe uma pasta chamada ".venv", nela tem todas as biblioteca e dependências que iremos usar,
-mas para usa-la é preciso ativa-la:
+Dentro do nosso backend você precisará criar o ambiente virtual ".venv", onde vai ser necessário instalar as bibliotecas e depências que iremos usar,
+para realizar a comunicacao com o frontend (para testar a comunitcacao, será usada a extensão thunder client)
+
+Antes de tentar criar o ambiente virtual, verifique se já existe uma pasta chamada ".venv" na pasta do backend, e caso exista delete-a.
+
+Para criar o ambiente virtual:
+
+>python -m venv .venv
+
+Agora você precisa ativá-lo:
 
 >./.venv/bin/activate
 
-Fazendo isso você vai habilitar o uso, terminando de programar, desative-a:
+Com o ambiente virtual ativo, você tera que instalar as bibliotecas, com os seguintes comandos:
 
->deactivate
+>pip install -r requirements.txt
 
 Para ativar o endereço de backend, depois de estar no ambiente virtual, utilize:
 
 >flask --app ./src/app run --debug
 
-### 3.2 - Extensão thunder client:
+Fazendo isso você vai habilitar o uso, terminando de programar, desative-a:
+
+>deactivate
+
+### 3.2 - Sobre o desenvolvimento:
+
+Durante o desenvolvimento, todos os nossos códigos vão estar no caminho "backend/src/", lembre-se de criar os arquivos de código ".py" nele,
+será importante para criarmos as rotas de comunicacão com o frontend que estão no arquivo "app.py" presente no mesmo caminho.
+
+Não delete arquivos criado por outros colegas, e se for altera-los, lembre-se de informar e deixar o código anterior comentado para backup.
+
+### 3.3 - Extensão thunder client:
 
 Uma extensão útil para gente é o thunder client, onde podemos testar as requisições do projeto:
 
@@ -94,7 +113,7 @@ No endereço do thunder client, selecione o metodo de POST, e envie um dado qual
 
 Se ele receber o dado e apresentar status de codigo 200, o backend estará recebendo a comunicação em JSON.
 
-### 3.3 - Caso queira mexer com o frontend:
+### 3.4 - Caso queira mexer com o frontend:
 
 Você precisará do node, e depois acessar a pasta do frontend:
 
@@ -111,7 +130,7 @@ branch main e instale:
 
 Após isso, volte para a sua branch e use:
 
->git merge main
+>git merge main<br/>
 >npm start
 
 Abrirá o navegador "em live", com as páginas do projeto.
@@ -121,7 +140,7 @@ Abrirá o navegador "em live", com as páginas do projeto.
 Outra boa pratica é nomear as variáveis e funções de acordo com sua utilidade,
 por exemplo:
 
->esta_e_uma_funcao_de_exemplo(): <br/>
+>esta_e_uma_funcao_de_exemplo():<br/>
 >&emsp;aqui_e_uma_variavel_com_o_texto_exemplo = 'exemplo'
 
 estamos nessa em grupo, e quanto mais claro ficar o que você está fazendo,
