@@ -2,9 +2,11 @@ import json
 import os
 from datetime import datetime
 
+
+
 # Caminho do arquivo JSON onde os dados serão salvos
 
-ARQUIVO_JSON = "registros_diarios.json"
+ARQUIVO_JSON = os.path.join("registros_diarios.json")
 
 # ----------- Função auxiliar -----------
 def carregando_registros():
@@ -19,8 +21,8 @@ def carregando_registros():
 
 def salvando_registros(registros):
 # Salva a lista de registros no arquivo JSON.
-    with open(ARQUIVO_JSON, "w", encoding="utf-8") as f:
-        json.dump(registros, f, ensure_ascii=False, indent=4)
+    with open(ARQUIVO_JSON, "w", encoding="utf-8") as arquivo:
+        json.dump(registros, arquivo, ensure_ascii=False, indent=4)
 
 
 def criando_registros(data, habito, status, humor, observacoes):
@@ -47,7 +49,7 @@ def listando_registros():
         return
     print("\nLISTA DE REGISTROS: ")
     for r in registros:
-        print(f"ID: {r['id']} | Data: {r['data']} | Hábito: {r['hábito']} | "
+        print(f"ID: {r['id']} | Data: {r['data']} | Hábito: {r['habito']} | "
               f"Status: {r['status']} | Humor: {r['humor']} | Obs.: {r['observacoes']}")
         
 
