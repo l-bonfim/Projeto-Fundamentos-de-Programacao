@@ -195,4 +195,4 @@ mais rapido a identificação de problemas caso ocorram.
 Todos fazem parte do projeto, então sintam-se livres para sugerir ideias, o projeto será melhor
 se todos acreditarem no que estão fazendo.
 
-Vamos pro 10,0.
+Vamos para o 10,0.
