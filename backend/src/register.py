@@ -13,7 +13,9 @@ def register_user():
         if data['name'] == saved_data[i]['name']:
             return jsonify({
                 'message': 'user already exist'
+                'status' : 409
             })
     data['id'] = len(saved_data)
     return data
+
 
