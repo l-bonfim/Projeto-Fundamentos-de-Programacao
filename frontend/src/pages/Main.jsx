@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import Header from "../components/Header";
 
 function Main() {
 
@@ -15,6 +16,7 @@ function Main() {
   return (
 
     <div>
+      <Header/>
       <h1>
         Bem-vindo!
       </h1>
