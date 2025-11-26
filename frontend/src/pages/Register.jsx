@@ -1,11 +1,13 @@
 import { useState } from "react";
+import Loading from "../components/Loading";
 
 function Register() {
   const [formData, setFormData] = useState({
-    name: '',
+    username: '',
     email: '',
     password: '',
   })
+  const [loadingState, setLoadingState] = useState(false);
 
   const handleFormInput = (event, name) => {
     setFormData({
@@ -13,20 +15,54 @@ function Register() {
       [name]: event.target.value
     })
   }
+  
+  const validateUser = () => {
+    const user = formData.username
+    let testUser = false
+    if (user.length <= 3) {
+      testUser = true
+    }
+    return testUser
+  }
+
+  const validateEmail = () => {
+    const email = formData.email
+    let testEmail = false
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      if (emailRegex.test(email) === false) {
+        testEmail = true
+  }
+  return testEmail
+  }
+
+  const validatePass = () => {
+    const pass = formData.password
+    let testPass = false
+      if (pass.length <= 5) {
+        testPass = true
+  }
+  return testPass
+  }
+
+  const validateSubmit = () => {
+    if (!validateUser() && !validateEmail() && !validatePass()) {
+      return false
+    }
+    return true
+  }
 
   const handleFormSubmit = async (event) => {
     try{
+      setLoadingState(true)
       event.preventDefault()
-      const response = await fetch('http://127.0.0.1:5000/register', {
+      await fetch('http://127.0.0.1:5000/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(formData)
       })
-      const json = await response.json()
-      console.log(response.status)
-      console.log(json)
+      setLoadingState(false)
     } catch (err) {
       console.log(err)
     }
@@ -37,15 +73,38 @@ function Register() {
       <a href="/">
         Home
       </a>
-      <form>
+      {loadingState ? (
+        <Loading/>
+      ) : (<form>
         <h1>
           Registro de novo usuario:
         </h1>
-        <input placeholder="Nome" type="text" value={formData.name} onChange={(e) => {handleFormInput(e, 'name')}} required />
-        <input placeholder="E-mail" type="text" value={formData.email} onChange={(e) => {handleFormInput(e, 'email')}}  required />
-        <input placeholder="Senha" type="password" value={formData.password} onChange={(e) => {handleFormInput(e, 'password')}}  required />
-        <button onClick={handleFormSubmit} >Registrar</button>
-      </form>
+        <input placeholder="Usuario" type="text" value={formData.username} onChange={(e) => {handleFormInput(e, 'username')}} />
+        {
+          validateUser() ? (
+            <span>Usuário deve ter 4 caracteres ou mais.</span>
+          ) : (
+            false
+          )
+        }
+        <input placeholder="E-mail" type="text" value={formData.email} onChange={(e) => {handleFormInput(e, 'email')}} />
+        {
+          validateEmail() ? (
+            <span>Digite um email válido.</span>
+          ) : (
+            false
+          )
+        }
+        <input placeholder="Senha" type="password" value={formData.password} onChange={(e) => {handleFormInput(e, 'password')}} />
+        {
+          validatePass() ? (
+            <span>Sua senha deve ter pelo menos 6 digitos.</span>
+          ) : (
+            false
+          )
+        }
+        <button disabled={ validateSubmit() } onClick={ handleFormSubmit } >Registrar</button>
+      </form>)}
     </div>
     
   )
