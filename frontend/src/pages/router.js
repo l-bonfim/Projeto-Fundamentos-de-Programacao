@@ -5,6 +5,7 @@ import Login from "./Login";
 import Register from "./Register";
 import Home from "./Home";
 import UserProfile from "./UserProfile"
+import EditProfile from "./EditProfile";
 
 
 const Router = () => {
@@ -15,7 +16,8 @@ const Router = () => {
         <Route Component={ Login } path="/login" />
         <Route Component={ Register } path="/register" />
         <Route Component={ Home } path="/home/:username" />
-        <Route Component={ UserProfile } path="/profile/:username"/>
+        <Route Component={ UserProfile } path="/profile/:username" />
+        <Route Component={ EditProfile } path="/profile/:username/edit" />
       </Routes>
     </BrowserRouter>
   )

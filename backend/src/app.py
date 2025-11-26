@@ -10,5 +10,5 @@ def register_page():
     if request.method == 'POST':
         return register_user()
 
-# @app.route('/login', methods=['GET'])
+# @app.route('/login', methods=['POST'])
 # def login_page():

@@ -3,6 +3,7 @@ import os
 import json
 
 JSON_FILE = 'user.json'
+JSON_FILE2 = 'people.json'
 
 def data_colecting():
     if os.path.exists(JSON_FILE):
@@ -13,6 +14,27 @@ def data_colecting():
             return []
     return []
 
+def people_data_colecting():
+    if os.path.exists(JSON_FILE2):
+        try:
+            with open(JSON_FILE2, 'r', encoding='utf-8') as file:
+                return json.load(file)
+        except (json.JSONDecodeError, FileNotFoundError):
+            return []
+    return []
+
+def register_people(data):
+    saved_data = people_data_colecting()
+    new_data = {
+        'email': data['email'],
+        'id': data['id'],
+        'username': data['username'],
+        'edited': False
+    }
+    with open(JSON_FILE2, 'w', encoding='utf-8') as file:
+        saved_data.append(new_data)
+        saved_data.sort(key = lambda saved_data: saved_data['id'])
+        json.dump(saved_data, file, ensure_ascii=False, indent=2)    
 
 def register_user():
     saved_data = data_colecting()
@@ -41,6 +63,7 @@ def register_user():
             data['id'] = len(saved_data)
     if saved_data[0]['email'] == '' and saved_data[0]['id'] == 1:
         saved_data = []
+    register_people(data)
     with open(JSON_FILE, 'w', encoding='utf-8') as file:
         saved_data.append(data)
         saved_data.sort(key = lambda saved_data: saved_data['id'])
