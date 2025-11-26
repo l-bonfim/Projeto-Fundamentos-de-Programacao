@@ -2,13 +2,11 @@ import json
 import os
 from datetime import datetime
 
-# Caminho do arquivo JSON onde os dados serão salvos
 
 ARQUIVO_JSON = "registros_diarios.json"
 
-# ----------- Função auxiliar -----------
+
 def carregando_registros():
-# Carrega os registros do arquivo JSON.
     if not os.path.exists(ARQUIVO_JSON):
         return []
     with open(ARQUIVO_JSON, "r", encoding="utf-8") as arquivo:
@@ -18,19 +16,17 @@ def carregando_registros():
             return []
 
 def salvando_registros(registros):
-# Salva a lista de registros no arquivo JSON.
-    with open(ARQUIVO_JSON, "w", encoding="utf-8") as f:
-        json.dump(registros, f, ensure_ascii=False, indent=4)
+    with open(ARQUIVO_JSON, "w", encoding="utf-8") as arquivo:
+        json.dump(registros, arquivo, ensure_ascii=False, indent=4)
 
 
-def criando_registros(data, habito, status, humor, observacoes):
-# Cria um novo registro diário.
+def criando_registros(data, habito, cumprido, humor, observacoes):
     registros = carregando_registros()
     novo_registro = {
         "id": int(datetime.now().timestamp()),
         "data": data,
         "habito": habito,
-        "status": status,
+        "cumprido": cumprido,
         "humor": humor,
         "observacoes": observacoes
     }
@@ -40,19 +36,17 @@ def criando_registros(data, habito, status, humor, observacoes):
 
 
 def listando_registros():
-# Exibe todos os registros cadastrados.
     registros = carregando_registros()
     if not registros:
         print("Nenhum registro encontrado.")
         return
     print("\nLISTA DE REGISTROS: ")
     for r in registros:
-        print(f"ID: {r['id']} | Data: {r['data']} | Hábito: {r['hábito']} | "
-              f"Status: {r['status']} | Humor: {r['humor']} | Obs.: {r['observacoes']}")
+        print(f"ID: {r['id']} | Data: {r['data']} | Hábito: {r['habito']} | "
+              f"Cumprido: {r['cumprido']} | Humor: {r['humor']} | Obs.: {r['observacoes']}")
         
 
 def atualizando_registro(id_registro, novos_dados):
-# Atualiza um registro pelo ID.
     registros = carregando_registros()
     for r in registros:
         if r["id"] == id_registro:
@@ -66,7 +60,6 @@ def atualizando_registro(id_registro, novos_dados):
     
    
 def deletando_registro(id_registro):
-# Remove um registro pelo ID.
     registros = carregando_registros()
     novos = [r for r in registros if r["id"] != id_registro]
     if len(novos) == len(registros):
@@ -87,12 +80,12 @@ if __name__ == "__main__":
         opcao = input("Escolha uma opção: ")
 
         if opcao == "1":
-            data = input("Data (DD-MM-AAA): ")
+            data = input("Data (DD-MM-AAAA): ")
             habito = input("Hábito: ")
-            status = input("Status(Cumprido/ Não Cumprido): ")
+            cumprido = bool(input("Cumprido?(True/False): "))
             humor = input("Humor(Feliz/Neutro/Triste): ")
             obs = input("Observações: ")
-            criando_registros(data, habito, status, humor, obs)
+            criando_registros(data, habito, cumprido, humor, obs)
         
         elif opcao == "2":
             listando_registros()
@@ -101,7 +94,7 @@ if __name__ == "__main__":
             listando_registros()
             try:
                 id_registro = int(input("Digite o ID do registro para atualizar: "))
-                campo = input("Campo a atualizar (data/habito/status/humor/observacoes): ")
+                campo = input("Campo a atualizar (data/habito/cumprido/humor/observacoes): ")
                 novo_valor = input(f"Novo valor para {campo}: ")
                 atualizando_registro(id_registro, {campo: novo_valor})
             except ValueError:
