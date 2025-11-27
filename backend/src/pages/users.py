@@ -72,8 +72,22 @@ def register_user():
 
 def login_user():
     saved_data = data_colecting()
+    person_data = people_data_colecting()
     data = request.get_json()
     for i in range(len(saved_data)):
         if saved_data[i]['email'] == data['email'] and saved_data[i]['password'] == data['password']:
+            login = {
+                'id': saved_data[i]['id'],
+                'username': saved_data[i]['username'],
+                'edited': person_data[i]['edited'],
+            }
+        else:
+            login = {
+                'message': 'Email ou senha estão incorretos',
+                'teste': i
+            }
+        return jsonify(login)
 
+# def edit_user():
+#     person_data = people_data_colecting()
 

@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from users import register_user
+from pages.users import register_user, login_user
 
 app = Flask(__name__)
 CORS(app)
