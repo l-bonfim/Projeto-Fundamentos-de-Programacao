@@ -2,7 +2,7 @@ from flask import request, jsonify
 import os
 import json
 
-JSON_FILE = 'user.json'
+JSON_FILE = 'users.json'
 JSON_FILE2 = 'people.json'
 
 def data_colecting():
@@ -69,5 +69,11 @@ def register_user():
         saved_data.sort(key = lambda saved_data: saved_data['id'])
         json.dump(saved_data, file, ensure_ascii=False, indent=2)    
     return data
+
+def login_user():
+    saved_data = data_colecting()
+    data = request.get_json()
+    for i in range(len(saved_data)):
+        if saved_data[i]['email'] == data['email'] and saved_data[i]['password'] == data['password']:
 
 
