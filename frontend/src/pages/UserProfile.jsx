@@ -3,8 +3,11 @@ function UserProfile(){
     return(
         <div>
             <h1>
-                Edição de Usuários
+                Dados de Usuários
             </h1>
+            <button>
+                Editar
+            </button>
         </div>
     )
 }
