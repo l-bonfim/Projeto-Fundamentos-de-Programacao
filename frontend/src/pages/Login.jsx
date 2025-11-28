@@ -32,7 +32,7 @@ function Login() {
       })
       const loginData = await login.json()
       if (loginData.edited === false) {
-        navigate(`/profile/${ loginData.username }`, {
+        navigate(`/profile/${ loginData.username }/edit`, {
           state : {
             id: loginData.id,
             edited: loginData.edited,

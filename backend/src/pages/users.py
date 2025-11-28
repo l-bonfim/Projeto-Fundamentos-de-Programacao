@@ -48,12 +48,12 @@ def register_user():
     for i in range(len(saved_data)):
         if data['email'] == saved_data[i]['email']:
             return jsonify({
-                'message': 'email already registered'
+                'message': 'Email já está em uso.'
             })
     for i in range(len(saved_data)):
         if data['username'] == saved_data[i]['username']:
             return jsonify({
-                'message': 'username already in use'
+                'message': 'Nome de usuário já está em uso.'
             })
     for i in range(len(saved_data)):
         if saved_data[i]['id'] != i:
@@ -81,12 +81,12 @@ def login_user():
                 'username': saved_data[i]['username'],
                 'edited': person_data[i]['edited'],
             }
+            return jsonify(login)
         else:
             login = {
                 'message': 'Email ou senha estão incorretos',
-                'teste': i
             }
-        return jsonify(login)
+    return jsonify(login)
 
 # def edit_user():
 #     person_data = people_data_colecting()

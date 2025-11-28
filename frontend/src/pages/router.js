@@ -17,6 +17,7 @@ const Router = () => {
         <Route Component={ Register } path="/register" />
         <Route Component={ Home } path="/home/:username" />
         <Route Component={ UserProfile } path="/profile/:username" />
+        <Route Component={ EditProfile } path="/profile/:username/edit" />
       </Routes>
     </BrowserRouter>
   )
