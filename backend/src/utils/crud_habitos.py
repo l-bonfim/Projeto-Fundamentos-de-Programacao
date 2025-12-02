@@ -1,7 +1,6 @@
 import json
 import os
 
-# Arquivos
 ARQUIVO_HABITOS = 'habitos.json'
 ARQUIVO_USUARIOS = 'usuarios.json'
 
@@ -42,33 +41,28 @@ def listar_usuarios_com_ids():
 
 def criar_habito():
     """Cria um novo hábito vinculado a um usuário"""
-    # Verifica se existem usuários cadastrados
     usuarios = listar_usuarios_com_ids()
     if not usuarios:
         return
     
     habitos = carregar_habitos()
     
-    # Solicita ID do usuário
     try:
         usuario_id = int(input("Digite o ID do usuário para vincular o hábito: "))
     except ValueError:
         print("ID inválido! Digite um número.")
         return
     
-    # Verifica se o usuário existe
     usuario_existe = any(usuario['id'] == usuario_id for usuario in usuarios)
     if not usuario_existe:
         print(f"Usuário com ID {usuario_id} não encontrado!")
         return
     
-    # Determina novo ID para o hábito
     if habitos:
         id_novo = max([h['id'] for h in habitos]) + 1
     else:
         id_novo = 1
 
-    # Coleta informações do hábito
     print("\n=== CADASTRO DE HÁBITO ===")
     nome = input("Nome do hábito: ").strip()
     if not nome:
@@ -79,10 +73,9 @@ def criar_habito():
     frequencia = input("Frequência (diário, semanal, etc): ").strip()
     meta = input("Meta associada (ex: 2L, 30min, 8h): ").strip()
 
-    # Cria o hábito com vínculo ao usuário
     habito = {
         "id": id_novo,
-        "usuario_id": usuario_id,  # Link com o usuário
+        "usuario_id": usuario_id, 
         "nome": nome,
         "categoria": categoria,
         "frequencia": frequencia,
@@ -102,7 +95,6 @@ def listar_habitos():
         print("Nenhum hábito cadastrado.")
         return
     
-    # Cria um dicionário para acesso rápido aos usuários por ID
     usuarios_dict = {usuario['id']: usuario for usuario in usuarios}
     
     print("\n=== LISTA DE HÁBITOS ===")
@@ -132,7 +124,6 @@ def atualizar_habito():
         print("ID inválido! Digite um número.")
         return
     
-    # Encontra o hábito
     habito_encontrado = None
     for habito in habitos:
         if habito['id'] == id_editar:
@@ -143,7 +134,6 @@ def atualizar_habito():
         print("Hábito não encontrado.")
         return
     
-    # Opção para alterar usuário
     print(f"\nHábito atual: {habito_encontrado['nome']}")
     print(f"Usuário atual: ID {habito_encontrado.get('usuario_id', 'Não vinculado')}")
     
@@ -154,7 +144,6 @@ def atualizar_habito():
         if usuarios:
             try:
                 novo_usuario_id = int(input("Digite o novo ID do usuário: "))
-                # Verifica se o usuário existe
                 usuario_existe = any(usuario['id'] == novo_usuario_id for usuario in usuarios)
                 if usuario_existe:
                     habito_encontrado['usuario_id'] = novo_usuario_id
@@ -166,7 +155,6 @@ def atualizar_habito():
                 print("ID inválido!")
                 return
     
-    # Atualiza outros campos
     print("\nDeixe em branco para manter o valor atual.")
     
     novo_nome = input(f"Nome atual [{habito_encontrado['nome']}]: ").strip()
@@ -203,7 +191,6 @@ def excluir_habito():
         print("ID inválido! Digite um número.")
         return
     
-    # Filtra hábitos mantendo todos exceto o com ID especificado
     habitos_antes = len(habitos)
     novos_habitos = [h for h in habitos if h['id'] != id_excluir]
     
@@ -225,7 +212,6 @@ def listar_habitos_por_usuario():
         print("ID inválido! Digite um número.")
         return
     
-    # Verifica se o usuário existe
     usuario_existe = any(usuario['id'] == usuario_id for usuario in usuarios)
     if not usuario_existe:
         print(f"Usuário com ID {usuario_id} não encontrado!")
@@ -234,7 +220,6 @@ def listar_habitos_por_usuario():
     habitos = carregar_habitos()
     habitos_usuario = [h for h in habitos if h.get('usuario_id') == usuario_id]
     
-    # Encontra nome do usuário
     nome_usuario = next((u['nome'] for u in usuarios if u['id'] == usuario_id), "Usuário Desconhecido")
     
     if not habitos_usuario:
