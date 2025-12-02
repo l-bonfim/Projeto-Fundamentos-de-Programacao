@@ -84,7 +84,7 @@ def criar_habito():
 
     habitos.append(habito)
     salvar_habitos(habitos)
-    print(f"\n✅ Hábito '{nome}' cadastrado com sucesso para o usuário ID {usuario_id}!\n")
+    print(f"\n Hábito '{nome}' cadastrado com sucesso para o usuário ID {usuario_id}!\n")
 
 def listar_habitos():
     """Lista hábitos mostrando também o usuário dono"""
@@ -174,7 +174,7 @@ def atualizar_habito():
         habito_encontrado['meta'] = nova_meta
     
     salvar_habitos(habitos)
-    print("\n✅ Hábito atualizado com sucesso!\n")
+    print("\n Hábito atualizado com sucesso!\n")
 
 def excluir_habito():
     """Exclui um hábito"""
@@ -196,7 +196,7 @@ def excluir_habito():
     
     if len(novos_habitos) != habitos_antes:
         salvar_habitos(novos_habitos)
-        print("\n✅ Hábito excluído com sucesso!\n")
+        print("\n Hábito excluído com sucesso!\n")
     else:
         print("ID não encontrado.")
 
