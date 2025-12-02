@@ -8,6 +8,7 @@ function Register() {
     password: '',
   })
   const [loadingState, setLoadingState] = useState(false);
+  const [message, setMessage] = useState('')
 
   const handleFormInput = (event, name) => {
     setFormData({
@@ -55,13 +56,15 @@ function Register() {
     try{
       setLoadingState(true)
       event.preventDefault()
-      await fetch('http://127.0.0.1:5000/register', {
+      const res = await fetch('http://127.0.0.1:5000/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(formData)
       })
+      const resData = await res.json()
+      setMessage(resData.message)
       setLoadingState(false)
     } catch (err) {
       console.log(err)
@@ -103,6 +106,11 @@ function Register() {
             false
           )
         }
+        {message === '' ? (true) : (
+            <span>
+              { message }
+            </span>
+          )}
         <button disabled={ validateSubmit() } onClick={ handleFormSubmit } >Registrar</button>
       </form>)}
     </div>

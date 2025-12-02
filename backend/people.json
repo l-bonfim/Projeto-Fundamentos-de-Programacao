@@ -1,50 +1,20 @@
 [
   {
-    "email": "a",
+    "email": "admin@admin.com",
     "id": 0,
-    "username": "a",
+    "username": "admin",
     "edited": false
   },
   {
-    "email": "asdasdsadsa@1.com",
+    "email": "teste@teste.com",
     "id": 1,
-    "username": "aaaaa",
+    "username": "teste",
     "edited": false
   },
   {
-    "email": "aaa@aaa.com",
+    "email": "a@a.com",
     "id": 2,
-    "username": "aaaaabbb",
-    "edited": false
-  },
-  {
-    "email": "asdasdsad@asdasdsad.com",
-    "id": 3,
-    "username": "asdas",
-    "edited": false
-  },
-  {
-    "email": "asdasdsad@asdasdsad.comasdsa",
-    "id": 4,
-    "username": "asdasadssdas",
-    "edited": false
-  },
-  {
-    "email": "asdas@sdsad.comasdsa",
-    "id": 5,
-    "username": "ssdas",
-    "edited": false
-  },
-  {
-    "email": "asd@oasdio.co",
-    "id": 6,
-    "username": "asdd",
-    "edited": false
-  },
-  {
-    "email": "asd@oasdio.cobcvb",
-    "id": 7,
-    "username": "asddcbvcvbcv",
+    "username": "lala",
     "edited": false
   }
 ]

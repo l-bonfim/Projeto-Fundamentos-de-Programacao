@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from users import register_user
+from pages.users import register_user, login_user
 
 app = Flask(__name__)
 CORS(app)
@@ -10,5 +10,7 @@ def register_page():
     if request.method == 'POST':
         return register_user()
 
-# @app.route('/login', methods=['POST'])
-# def login_page():
+@app.route('/login', methods=['POST'])
+def login_page():
+    if request.method == 'POST':
+        return login_user()

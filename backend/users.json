@@ -1,38 +1,20 @@
 [
   {
-    "name": "admin",
-    "email": "admin@stro",
-    "password": "passtest",
+    "username": "admin",
+    "email": "admin@admin.com",
+    "password": "123456",
     "id": 0
   },
   {
-    "name": "nametest",
-    "email": "ssasdsasaa",
-    "password": "passtest",
+    "username": "teste",
+    "email": "teste@teste.com",
+    "password": "testes",
     "id": 1
   },
   {
-    "name": "test",
-    "email": "test",
-    "password": "test",
+    "username": "lala",
+    "email": "a@a.com",
+    "password": "123456",
     "id": 2
-  },
-  {
-    "name": "nametest",
-    "email": "ssa",
-    "password": "passtest",
-    "id": 3
-  },
-  {
-    "name": "",
-    "email": "",
-    "password": "",
-    "id": 4
-  },
-  {
-    "name": "nametest",
-    "email": "admininastro@tro",
-    "password": "passtest",
-    "id": 7
   }
 ]
