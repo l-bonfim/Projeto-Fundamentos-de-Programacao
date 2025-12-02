@@ -1,0 +1,26 @@
+[
+  {
+    "name": "admin",
+    "email": "admin@stro",
+    "password": "passtest",
+    "id": 0
+  },
+  {
+    "name": "nametest",
+    "email": "ssasdsasaa",
+    "password": "passtest",
+    "id": 1
+  },
+  {
+    "name": "nametest",
+    "email": "ssa",
+    "password": "passtest",
+    "id": 3
+  },
+  {
+    "name": "nametest",
+    "email": "admininastro@tro",
+    "password": "passtest",
+    "id": 7
+  }
+]
