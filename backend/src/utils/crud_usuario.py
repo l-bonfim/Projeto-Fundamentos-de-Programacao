@@ -4,7 +4,6 @@ import os
 JSON_FILE = "usuarios.json"
 
 def carregar_usuarios():
-    """Carrega usuários do arquivo JSON"""
     if os.path.exists(JSON_FILE):
         try:
             with open(JSON_FILE, 'r', encoding='utf-8') as file:
@@ -14,7 +13,6 @@ def carregar_usuarios():
     return []
 
 def salvar_usuarios(usuarios):
-    """Salva a lista de usuários no arquivo JSON"""
     try:
         with open(JSON_FILE, 'w', encoding='utf-8') as file:
             json.dump(usuarios, file, ensure_ascii=False, indent=2)
@@ -24,16 +22,13 @@ def salvar_usuarios(usuarios):
         return False
 
 def criar_usuario(nome, email):
-    """Cria um novo usuário"""
     usuarios = carregar_usuarios()
     
-    # Verificar se usuário já existe
     for u in usuarios:
         if u["email"] == email:
             print("Usuário com este email já existe!")
             return False
     
-    # Determinar próximo ID
     if usuarios:
         proximo_id = max(u["id"] for u in usuarios) + 1
     else:
@@ -55,18 +50,16 @@ def criar_usuario(nome, email):
         return False
 
 def listar_usuarios():
-    """Lista todos os usuários"""
     usuarios = carregar_usuarios()
     
     if not usuarios:
         print("Nenhum usuário cadastrado.")
     else:
-        print("\nLista de usuários:")
+        print(f"\nLista de usuários (Total: {len(usuarios)}):")
         for u in usuarios:
             print(f"ID: {u['id']} | Nome: {u['nome']} | Email: {u['email']}")
 
 def atualizar_usuario(id_usuario, nome=None, email=None):
-    """Atualiza um usuário existente"""
     usuarios = carregar_usuarios()
     usuario_encontrado = False
     
@@ -74,14 +67,12 @@ def atualizar_usuario(id_usuario, nome=None, email=None):
         if u["id"] == id_usuario:
             usuario_encontrado = True
             
-            # Verificar se o novo email já existe em outro usuário
             if email:
                 for outro_usuario in usuarios:
                     if outro_usuario["id"] != id_usuario and outro_usuario["email"] == email:
                         print("Email já está em uso por outro usuário!")
                         return False
             
-            # Atualizar dados
             if nome:
                 u["nome"] = nome
             if email:
@@ -101,7 +92,6 @@ def atualizar_usuario(id_usuario, nome=None, email=None):
         return False
 
 def deletar_usuario(id_usuario):
-    """Remove um usuário"""
     usuarios = carregar_usuarios()
     usuarios_antes = len(usuarios)
     
@@ -120,7 +110,6 @@ def deletar_usuario(id_usuario):
         return False
 
 def menu():
-    """Menu principal do sistema"""
     while True:
         print("\n=== MENU DE USUÁRIO ===")
         print("1 - Criar usuário")
