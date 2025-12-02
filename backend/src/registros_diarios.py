@@ -82,7 +82,7 @@ if __name__ == "__main__":
         if opcao == "1":
             data = input("Data (DD-MM-AAAA): ")
             habito = input("Hábito: ")
-            cumprido = bool(input("Cumprido?(True/False): "))
+            cumprido = input("Cumprido?(Sim/Nao): ")
             humor = input("Humor(Feliz/Neutro/Triste): ")
             obs = input("Observações: ")
             criando_registros(data, habito, cumprido, humor, obs)
