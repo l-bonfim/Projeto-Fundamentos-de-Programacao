@@ -298,7 +298,7 @@ def deletar_registro():
 
 
 # ---------- Menu ----------
-def menu():
+def menu_rd():
     while True:
         print("""
 === SISTEMA DE REGISTROS DIÁRIOS (VINCULADOS A HÁBITOS) ===
@@ -331,4 +331,4 @@ def menu():
 
 
 if __name__ == "__main__":
-    menu()
+    menu_rd()

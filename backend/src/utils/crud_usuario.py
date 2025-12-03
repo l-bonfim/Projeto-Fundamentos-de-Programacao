@@ -109,14 +109,14 @@ def deletar_usuario(id_usuario):
         print("Erro ao salvar alterações!")
         return False
 
-def menu():
+def menu_u():
     while True:
         print("\n=== MENU DE USUÁRIO ===")
         print("1 - Criar usuário")
         print("2 - Listar usuários")
         print("3 - Atualizar usuário")
         print("4 - Deletar usuário")
-        print("5 - Sair")
+        print("0 - Sair")
 
         opcao = input("Escolha uma opção: ")
 
@@ -153,7 +153,7 @@ def menu():
             except ValueError:
                 print("ID deve ser um número!")
 
-        elif opcao == "5":
+        elif opcao == "0":
             print("Saindo...")
             break
 
@@ -161,4 +161,4 @@ def menu():
             print("Opção inválida!")
 
 if __name__ == "__main__":
-    menu()
+    menu_u()
