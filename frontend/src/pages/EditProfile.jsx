@@ -1,9 +1,13 @@
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
 import Loading from "../components/Loading";
+import Header from "../components/Header";
 
 function EditProfile() {
 
+  const location = useLocation()
+  const { state } = location
+  const { username, id } = state
   const navigate = useNavigate()
   const [formData, setFormData] = useState({
     email: '',
@@ -12,7 +16,8 @@ function EditProfile() {
     username: '',
     age: 0,
     height:0,
-    weight: 0
+    weight: 0,
+    id: id
   })
   const [loadingState, setLoadingState] = useState(false)
   const [passArea, setPassArea] = useState(false)
@@ -25,43 +30,104 @@ function EditProfile() {
     })
   }
 
+  useEffect(() => {
+    const colectingUserData = async () => {
+    setLoadingState(true)
+    const fetchingUserData = await fetch(`http://127.0.0.1:5000/profile/${ username }/edit`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+    const userData = await fetchingUserData.json()
+    if (userData.id === id) {
+      setFormData(userData)
+    }
+    setLoadingState(false)
+  }
+
+    colectingUserData()
+  }, [id, username])
+
   const togglePassClick = (event) => {
     event.preventDefault()
     setPassArea(!passArea)
   }
 
+  const editUserProfile = async (event) => {
+    try{
+      setLoadingState(true)
+      event.preventDefault()
+      const editedData = await fetch(`http://127.0.0.1:5000/profile/${ username }/edit`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      })
+      const newData = await editedData.json()
+      setMessage(newData.message)
+      if (newData.edited === true) {
+        navigate(`/profile/${ newData.username }`, {
+          state : {
+            id: newData.id,
+            username: newData.username
+          }
+        })
+      }
+      setLoadingState(false)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   return(
     <div>
-      <h1>
-        Editar Usuário
-      </h1>
-      <form className="form-area">
-        <input type="text" placeholder="Usuário" onChange={ (e) => handleFormInput(e, 'username') } value={formData.username} />
-        <input type="text" placeholder="Email" onChange={ (e) => handleFormInput(e, 'email') } value={formData.email}  />
-        <input type="text" placeholder="Nome Completo" onChange={ (e) => handleFormInput(e, 'name') } value={formData.name}  />
-        Idade:
-        <input type="number" placeholder="Idade" onChange={ (e) => handleFormInput(e, 'age') } value={formData.age}  />
-        Altura (cm):
-        <input type="number" placeholder="Altura (cm)" onChange={ (e) => handleFormInput(e, 'height') } value={formData.height}  />
-        Peso (kg):
-        <input type="number" placeholder="Peso (kg)" onChange={ (e) => handleFormInput(e, 'weight') } value={formData.weight}  />
-        {
-          passArea ? (
-            <div>
-              Senha atual:
-              <input type="password" placeholder="Senha atual"/>
-              <input type="password" placeholder="Digite novamente"/>
-              Nova senha:
-              <input type="password" placeholder="Nova senha"/>
-              <button onClick={ togglePassClick } >Alterar Senha</button>
-            </div>
-          ) : 
-          (
-            <button onClick={ togglePassClick } >Alterar Senha</button>
-          )
-        }
-        <button>Salvar</button>
-      </form>
+      <Header/>
+      {
+        loadingState ? (
+          <Loading/>
+        ) : (
+          <div>
+            <h1>
+              Editar Usuário
+            </h1>
+            <form className="form-area">
+              <input type="text" placeholder="Usuário" onChange={ (e) => handleFormInput(e, 'username') } value={formData.username} />
+              <input type="text" placeholder="Email" onChange={ (e) => handleFormInput(e, 'email') } value={formData.email}  />
+              <input type="text" placeholder="Nome Completo" onChange={ (e) => handleFormInput(e, 'name') } value={formData.name}  />
+              Idade:
+              <input type="number" placeholder="Idade" onChange={ (e) => handleFormInput(e, 'age') } value={formData.age}  />
+              Altura (cm):
+              <input type="number" placeholder="Altura (cm)" onChange={ (e) => handleFormInput(e, 'height') } value={formData.height}  />
+              Peso (kg):
+              <input type="number" placeholder="Peso (kg)" onChange={ (e) => handleFormInput(e, 'weight') } value={formData.weight}  />
+              {
+                passArea ? (
+                  <div className="form-area">
+                    Senha atual:
+                    <input type="password" placeholder="Senha atual"/>
+                    <input type="password" placeholder="Digite novamente"/>
+                    Nova senha:
+                    <input type="password" placeholder="Nova senha"/>
+                    <button onClick={ togglePassClick } >Alterar Senha</button>
+                  </div>
+                ) : 
+                (
+                  <button onClick={ togglePassClick } >Alterar Senha</button>
+                )
+              }
+              <button onClick={ editUserProfile } >Salvar</button>
+              {
+                message === '' ? (true) : (
+                  <span>
+                    { message }
+                  </span>
+                )
+              }
+            </form>
+          </div>
+        )}
     </div>
   )
 }

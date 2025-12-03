@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Loading from "../components/Loading";
+import Header from "../components/Header";
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -73,46 +74,48 @@ function Register() {
 
   return(
     <div>
-      <a href="/">
-        Home
-      </a>
+      <Header/>
       {loadingState ? (
         <Loading/>
-      ) : (<form>
-        <h1>
-          Registro de novo usuario:
-        </h1>
-        <input placeholder="Usuario" type="text" value={formData.username} onChange={(e) => {handleFormInput(e, 'username')}} />
-        {
-          validateUser() ? (
-            <span>Usuário deve ter 4 caracteres ou mais.</span>
-          ) : (
-            false
-          )
-        }
-        <input placeholder="E-mail" type="text" value={formData.email} onChange={(e) => {handleFormInput(e, 'email')}} />
-        {
-          validateEmail() ? (
-            <span>Digite um email válido.</span>
-          ) : (
-            false
-          )
-        }
-        <input placeholder="Senha" type="password" value={formData.password} onChange={(e) => {handleFormInput(e, 'password')}} />
-        {
-          validatePass() ? (
-            <span>Sua senha deve ter pelo menos 6 digitos.</span>
-          ) : (
-            false
-          )
-        }
-        {message === '' ? (true) : (
-            <span>
-              { message }
-            </span>
-          )}
-        <button disabled={ validateSubmit() } onClick={ handleFormSubmit } >Registrar</button>
-      </form>)}
+      ) : (
+        <div>
+          <form className="form-area">
+            <h2>
+              Registro de novo usuario:
+            </h2>
+            <input placeholder="Usuario" type="text" value={formData.username} onChange={(e) => {handleFormInput(e, 'username')}} />
+            {
+              validateUser() ? (
+                <span>Usuário deve ter 4 caracteres ou mais.</span>
+              ) : (
+                false
+              )
+            }
+            <input placeholder="E-mail" type="text" value={formData.email} onChange={(e) => {handleFormInput(e, 'email')}} />
+            {
+              validateEmail() ? (
+                <span>Digite um email válido.</span>
+              ) : (
+                false
+              )
+            }
+            <input placeholder="Senha" type="password" value={formData.password} onChange={(e) => {handleFormInput(e, 'password')}} />
+            {
+              validatePass() ? (
+                <span>Sua senha deve ter pelo menos 6 digitos.</span>
+              ) : (
+                false
+              )
+            }
+            {message === '' ? (true) : (
+                <span>
+                  { message }
+                </span>
+              )}
+            <button disabled={ validateSubmit() } onClick={ handleFormSubmit } >Registrar</button>
+          </form>
+        </div>
+    )}
     </div>
     
   )

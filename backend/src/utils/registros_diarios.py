@@ -6,8 +6,6 @@ ARQUIVO_REGISTROS = "registros_diarios.json"
 ARQUIVO_HABITOS = "habitos.json"
 ARQUIVO_USUARIOS = "usuarios.json"
 
-
-
 def carregar_json(path):
     if not os.path.exists(path):
         return []
@@ -26,7 +24,6 @@ def salvar_json(path, data):
     except Exception as e:
         print(f"Erro ao salvar {path}: {e}")
         return False
-
 
 def carregar_usuarios():
     return carregar_json(ARQUIVO_USUARIOS)
@@ -87,13 +84,20 @@ def buscar_usuario_por_id(usuarios, usuario_id):
 
 
 def gerar_id_unico():
-
-    return int(datetime.now().timestamp() * 1000)
+    registros = carregar_registros()
+    if registros == []:
+        return 1
+    else:
+        for i in range(len(registros)):
+            print(registros[i]["id"] != i+1, registros[i]["id"])
+            if registros[i]["id"] != i+1:
+                return i+1
+        return len(registros)+1
+        
 
 
 def validar_data_input(data_str):
-    """Aceita DD-MM-AAAA ou AAAA-MM-DD; retorna string no formato DD-MM-AAAA.
-       Se vazio, retorna data atual."""
+
     if not data_str or not data_str.strip():
         return datetime.now().strftime("%d-%m-%Y")
     data_str = data_str.strip()
@@ -153,11 +157,11 @@ def criar_registro():
 
     registros = carregar_registros()
     registros.append(registro)
+    registros.sort(key = lambda registros: registros["id"])
     if salvar_registros(registros):
         print("Registro criado com sucesso!")
     else:
         print("Erro ao salvar registro.")
-'''comentario para adicionar alterações'''
 
 def listar_todos_registros():
     registros = carregar_registros()
@@ -238,7 +242,6 @@ def atualizar_registro():
     if novo_data:
         registro['data'] = validar_data_input(novo_data)
 
-    
     trocar_habito = input("Deseja alterar o hábito vinculado? (s/n): ").strip().lower()
     if trocar_habito == 's':
         habitos = carregar_habitos()
@@ -290,7 +293,6 @@ def deletar_registro():
         print("Registro deletado com sucesso!")
     else:
         print("Erro ao salvar alterações.")
-
 
 
 def menu_rd():
