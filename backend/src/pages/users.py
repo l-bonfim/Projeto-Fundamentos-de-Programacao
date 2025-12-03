@@ -29,7 +29,11 @@ def register_people(data):
         'email': data['email'],
         'id': data['id'],
         'username': data['username'],
-        'edited': False
+        'edited': False,
+        'name': '',
+        'age': 0,
+        'height': 0,
+        'weight': 0
     }
     with open(JSON_FILE2, 'w', encoding='utf-8') as file:
         saved_data.append(new_data)
@@ -88,6 +92,39 @@ def login_user():
             }
     return jsonify(login)
 
-# def edit_user():
-#     person_data = people_data_colecting()
+def user_data(username):
+    saved_people = people_data_colecting()
+    for p in saved_people:
+        if p['username'] == username:
+            return p
+    return jsonify({
+        'message': 'Erro ao buscar usuário.'
+    })
+
+def edit_user():
+    saved_data = data_colecting()
+    people_data = people_data_colecting()
+    data = request.get_json()
+    for i in range(len(people_data)):
+        if people_data[i]['id'] != data['id']:
+            if people_data[i]['email'] == data['email']:
+                return jsonify({
+                    'message': 'Email já está cadastrado por outro usuário.'
+                })
+            if people_data[i]['username'] == data['username']:
+                return jsonify({
+                    'message': 'Usuário já está em uso.'
+                })
+        elif people_data[i]['id'] == data['id']:
+            people_data[i] = data
+            people_data[i]['edited'] = True
+            saved_data[i]['username'] = data['username']
+            saved_data[i]['email'] = data['email']
+    with open(JSON_FILE, 'w', encoding='utf-8') as file:
+        saved_data.sort(key = lambda saved_data: saved_data['id'])
+        json.dump(saved_data, file, ensure_ascii=False, indent=2)
+    with open(JSON_FILE2, 'w', encoding='utf-8') as file2:
+        people_data.sort(key = lambda saved_data: saved_data['id'])
+        json.dump(people_data, file2, ensure_ascii=False, indent=2)
+    return jsonify(data)
 

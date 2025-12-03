@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Loading from "../components/Loading";
+import Header from "../components/Header";
 
 function Login() {
 
@@ -50,7 +51,6 @@ function Login() {
       } else {
         setMessage(loginData.message)
       }
-      console.log(loginData)
       setLoadingState(false)
     } catch (err) {
       console.log(err)
@@ -59,12 +59,11 @@ function Login() {
 
   return(
     <div>
-      <a href="/">
-        Home
-      </a>
+      <Header/>
       {
         loadingState ? (<Loading/>) : (
-        <form>
+        <form className="form-area">
+          <h2>Login</h2>
           <input placeholder="E-mail" type="text" value={formData.email} onChange={(e) => {handleFormInput(e, 'email')}} />
           <input placeholder="Senha" type="password" value={formData.password} onChange={(e) => {handleFormInput(e, 'password')}} />
           <button onClick={ handleLogin }>Entrar</button>

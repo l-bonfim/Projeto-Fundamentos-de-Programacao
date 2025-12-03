@@ -9,3 +9,19 @@ body {
   width: 100vw;
   background: linear-gradient(#C0C0C0CC, #808080CC);
 }
+
+.form-area{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 60%;
+}
+
+.logo{
+  width: 100px;
+}
+
+.header-area{
+  display: flex;
+  flex-direction: column;
+}
