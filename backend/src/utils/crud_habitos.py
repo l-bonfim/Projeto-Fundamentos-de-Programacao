@@ -21,7 +21,7 @@ def carregar_habitos():
 
 def salvar_habitos(habitos):
     with open(ARQUIVO_HABITOS, 'w', encoding='utf-8') as f:
-        json.dump(habitos, f, indent=4, ensure_ascii=False)
+        json.dump(habitos, f, indent=2, ensure_ascii=False)
 
 def listar_usuarios_com_ids():
     usuarios = carregar_usuarios()
