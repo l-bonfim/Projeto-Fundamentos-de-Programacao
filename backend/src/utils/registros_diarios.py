@@ -6,8 +6,6 @@ ARQUIVO_REGISTROS = "registros_diarios.json"
 ARQUIVO_HABITOS = "habitos.json"
 ARQUIVO_USUARIOS = "usuarios.json"
 
-
-# ---------- Helpers para carregar/salvar JSON ----------
 def carregar_json(path):
     if not os.path.exists(path):
         return []
@@ -27,8 +25,6 @@ def salvar_json(path, data):
         print(f"Erro ao salvar {path}: {e}")
         return False
 
-
-# ---------- Carregadores específicos ----------
 def carregar_usuarios():
     return carregar_json(ARQUIVO_USUARIOS)
 
@@ -45,7 +41,6 @@ def salvar_registros(registros):
     return salvar_json(ARQUIVO_REGISTROS, registros)
 
 
-# ---------- Funções de apoio ----------
 def listar_usuarios_console():
     usuarios = carregar_usuarios()
     if not usuarios:
@@ -89,13 +84,20 @@ def buscar_usuario_por_id(usuarios, usuario_id):
 
 
 def gerar_id_unico():
-    # timestamp em ms para reduzir colisão
-    return int(datetime.now().timestamp() * 1000)
+    registros = carregar_registros()
+    if registros == []:
+        return 1
+    else:
+        for i in range(len(registros)):
+            print(registros[i]["id"] != i+1, registros[i]["id"])
+            if registros[i]["id"] != i+1:
+                return i+1
+        return len(registros)+1
+        
 
 
 def validar_data_input(data_str):
-    """Aceita DD-MM-AAAA ou AAAA-MM-DD; retorna string no formato DD-MM-AAAA.
-       Se vazio, retorna data atual."""
+
     if not data_str or not data_str.strip():
         return datetime.now().strftime("%d-%m-%Y")
     data_str = data_str.strip()
@@ -105,12 +107,10 @@ def validar_data_input(data_str):
             return d.strftime("%d-%m-%Y")
         except ValueError:
             continue
-    # se falhar, retorna mesma string (mas poderia avisar)
     print("Formato de data não reconhecido. Use DD-MM-AAAA ou AAAA-MM-DD. Usando valor informado.")
     return data_str
 
 
-# ---------- CRUD de Registros (vinculados a hábito) ----------
 def criar_registro():
     habitos = carregar_habitos()
     usuarios = carregar_usuarios()
@@ -118,7 +118,6 @@ def criar_registro():
         print("Não há hábitos cadastrados. Cadastre um hábito antes de criar registros.")
         return
 
-    # Mostrar hábitos e permitir escolher
     listar_habitos_console()
     try:
         habito_id = int(input("Digite o ID do hábito para vincular o registro: ").strip())
@@ -158,11 +157,11 @@ def criar_registro():
 
     registros = carregar_registros()
     registros.append(registro)
+    registros.sort(key = lambda registros: registros["id"])
     if salvar_registros(registros):
         print("Registro criado com sucesso!")
     else:
         print("Erro ao salvar registro.")
-'''comentario para adicionar alterações'''
 
 def listar_todos_registros():
     registros = carregar_registros()
@@ -243,7 +242,6 @@ def atualizar_registro():
     if novo_data:
         registro['data'] = validar_data_input(novo_data)
 
-    # permitir trocar de hábito — se trocar, atualizamos usuario_id e habito_nome automaticamente
     trocar_habito = input("Deseja alterar o hábito vinculado? (s/n): ").strip().lower()
     if trocar_habito == 's':
         habitos = carregar_habitos()
@@ -297,7 +295,6 @@ def deletar_registro():
         print("Erro ao salvar alterações.")
 
 
-# ---------- Menu ----------
 def menu_rd():
     while True:
         print("""
