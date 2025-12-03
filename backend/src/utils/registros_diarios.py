@@ -162,7 +162,7 @@ def criar_registro():
         print("Registro criado com sucesso!")
     else:
         print("Erro ao salvar registro.")
-
+'''comentario para adicionar alterações'''
 
 def listar_todos_registros():
     registros = carregar_registros()
