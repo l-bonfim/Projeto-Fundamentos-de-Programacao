@@ -225,7 +225,7 @@ def listar_habitos_por_usuario():
         print(f"   Meta: {habito['meta']}")
         print("-" * 30)
 
-def menu():
+def menu_h():
     while True:
         print("""
 === SISTEMA DE HÁBITOS SAUDÁVEIS ===
@@ -255,4 +255,4 @@ def menu():
             print("Opção inválida!")
 
 if __name__ == "__main__":
-    menu()
+    menu_h()
