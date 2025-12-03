@@ -5,7 +5,6 @@ ARQUIVO_HABITOS = 'habitos.json'
 ARQUIVO_USUARIOS = 'usuarios.json'
 
 def carregar_usuarios():
-    """Carrega usuários do arquivo JSON"""
     if not os.path.exists(ARQUIVO_USUARIOS):
         return []
     try:
@@ -15,19 +14,16 @@ def carregar_usuarios():
         return []
 
 def carregar_habitos():
-    """Carrega hábitos do arquivo JSON"""
     if not os.path.exists(ARQUIVO_HABITOS):
         return []
     with open(ARQUIVO_HABITOS, 'r', encoding='utf-8') as f:
         return json.load(f)
 
 def salvar_habitos(habitos):
-    """Salva hábitos no arquivo JSON"""
     with open(ARQUIVO_HABITOS, 'w', encoding='utf-8') as f:
         json.dump(habitos, f, indent=4, ensure_ascii=False)
 
 def listar_usuarios_com_ids():
-    """Lista usuários disponíveis com seus IDs"""
     usuarios = carregar_usuarios()
     if not usuarios:
         print("Nenhum usuário cadastrado. Cadastre um usuário primeiro!")
@@ -40,7 +36,6 @@ def listar_usuarios_com_ids():
     return usuarios
 
 def criar_habito():
-    """Cria um novo hábito vinculado a um usuário"""
     usuarios = listar_usuarios_com_ids()
     if not usuarios:
         return
@@ -87,7 +82,6 @@ def criar_habito():
     print(f"\n Hábito '{nome}' cadastrado com sucesso para o usuário ID {usuario_id}!\n")
 
 def listar_habitos():
-    """Lista hábitos mostrando também o usuário dono"""
     habitos = carregar_habitos()
     usuarios = carregar_usuarios()
     
@@ -110,7 +104,6 @@ def listar_habitos():
         print("-" * 40)
 
 def atualizar_habito():
-    """Atualiza um hábito existente"""
     habitos = carregar_habitos()
     if not habitos:
         print("Nenhum hábito cadastrado.")
@@ -177,7 +170,6 @@ def atualizar_habito():
     print("\n Hábito atualizado com sucesso!\n")
 
 def excluir_habito():
-    """Exclui um hábito"""
     habitos = carregar_habitos()
     if not habitos:
         print("Nenhum hábito cadastrado.")
@@ -201,7 +193,6 @@ def excluir_habito():
         print("ID não encontrado.")
 
 def listar_habitos_por_usuario():
-    """Lista hábitos de um usuário específico"""
     usuarios = listar_usuarios_com_ids()
     if not usuarios:
         return
@@ -235,7 +226,6 @@ def listar_habitos_por_usuario():
         print("-" * 30)
 
 def menu():
-    """Menu principal do sistema de hábitos"""
     while True:
         print("""
 === SISTEMA DE HÁBITOS SAUDÁVEIS ===
