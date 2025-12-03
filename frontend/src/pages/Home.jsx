@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import Header from "../components/Header";
 
 function Home() {
 
@@ -9,10 +10,7 @@ function Home() {
 
   return(
     <div>
-      <section>
-        Olá $USER,
-        Aqui está sua área de hábitos:
-      </section>
+      <Header/>
       <div>
         Habitos:
         <button>Adicionar hábito</button>

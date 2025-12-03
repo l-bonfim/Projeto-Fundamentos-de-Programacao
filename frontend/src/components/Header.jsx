@@ -36,6 +36,14 @@ function Header() {
     navigate("/Login")
   }
 
+  const handleHomeUserClick = () => {
+    navigate(`/home/${ username }`, {
+          state : {
+            username: username
+          }
+        })
+  }
+
 	return(
 		<header>
 			<nav>
@@ -61,12 +69,21 @@ function Header() {
               <img className="logo" src={ logo } alt="logo" />
               <h1>HabitPlanner</h1>
               <h2>
-                Bem-Vindo { username }!
+                Olá { username }!
               </h2>
               <nav>
-                <a href="/">Home</a>
-                <a href="/login">Login</a>
-                <a href="/resgiter">Cadastrar</a>
+                <button onClick={handleHomeUserClick}>
+                  Home
+                </button>
+                <button onClick={handleLoginClick}>
+                  Entrar
+                </button>
+                <button onClick={handleRegisterClick}>
+                  Registrar
+                </button>
+                <button onClick={handleHomeClick}>
+                  Sair
+                </button>
               </nav>
             </div>
           )
